@@ -18,7 +18,7 @@ focus=`adb shell dumpsys window | findStr mCurrentFocus`
 
 
 #extract out {package/class}, output: com.ss.android.ugc.aweme/com.ss.android.ugc.aweme.splash.SplashActivity
-classpath=`echo ${focus} | awk '{print $3}'`
+classpath=`echo ${focus#*{} | awk '{print $3}'`
 
 
 #crop string extract package name, output: com.ss.android.ugc.aweme
