@@ -12,17 +12,20 @@
 #See the License for the specific language governing permissions and
 #limitations under the License.
 
+if [[ ! -n "$1" ]]; then
+	#current focused App, output: mCurrentFocus=Window{c053bb9 u0 com.ss.android.ugc.aweme/com.ss.android.ugc.aweme.splash.SplashActivity}
+	focus=`adb shell dumpsys window | findStr mCurrentFocus`
 
-#current focused App, output: mCurrentFocus=Window{c053bb9 u0 com.ss.android.ugc.aweme/com.ss.android.ugc.aweme.splash.SplashActivity}
-focus=`adb shell dumpsys window | findStr mCurrentFocus`
+	#extract out {package/class}, output: com.ss.android.ugc.aweme/com.ss.android.ugc.aweme.splash.SplashActivity
+	classpath=`echo ${focus#*{} | awk '{print $3}'`
 
-
-#extract out {package/class}, output: com.ss.android.ugc.aweme/com.ss.android.ugc.aweme.splash.SplashActivity
-classpath=`echo ${focus#*{} | awk '{print $3}'`
-
-
-#crop string extract package name, output: com.ss.android.ugc.aweme
-package=`echo ${classpath%/*}`
+	#crop string extract package name, output: com.ss.android.ugc.aweme
+	package=`echo ${classpath%/*}`
+else
+	#use input args as package name
+    package=$1
+    echo "pull $1 package "
+fi
 
 
 #figure out this package install path, output: package:/data/app/com.ss.android.ugc.aweme-bWD-6eHGY_JWxoiHreHc5A==/base.apk
